@@ -1,0 +1,28 @@
+workflows:
+  ios-testflight:
+    name: BlackBarber iOS TestFlight
+    max_build_duration: 30
+    instance_type: mac_mini_m2
+    environment:
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Build ipa
+        script: |
+          xcode-project build-ipa \
+            --project BlackBarberApp/BlackBarberApp.xcodeproj \
+            --scheme BlackBarberApp
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      # 1) Configure a assinatura iOS no Codemagic:
+      #    Teams -> sua team -> iOS code signing (certificado .p12 + provisioning profiles)
+      #    OU integre o Apple Developer Portal (Developer Portal -> Generate credentials)
+      # 2) Para publicar no TestFlight, descomente e preencha:
+      # app_store_connect:
+      #   auth: integration
+      #   submit_to_testflight: true
+      email:
+        recipients:
+          - troque-este-email@exemplo.com
